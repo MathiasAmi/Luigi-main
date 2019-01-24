@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Luigi:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Luigi_jar</output-path>
+    <root id="archive" name="Luigi.jar">
+      <element id="module-output" name="Luigi" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Libr/fxgl-0.5.4-uber (1).jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
