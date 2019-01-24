@@ -1,47 +1,63 @@
-import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.view.ScrollingBackgroundView;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.scene.FXGLMenu;
-import com.almasb.fxgl.scene.SceneFactory;
-import com.almasb.fxgl.scene.Viewport;
-import com.almasb.fxgl.scene.menu.FXGLDefaultMenu;
-import com.almasb.fxgl.scene.menu.MenuType;
 import com.almasb.fxgl.settings.GameSettings;
-import com.almasb.fxgl.texture.Texture;
-import com.mathias.luigi.Luigi;
+import com.mathias.luigi.LuigiFactory;
 import com.mathias.luigi.LuigiType;
 import com.mathias.luigi.PlayerControl;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class LuigiGame extends GameApplication {
 
     private Entity player;
+    /*
+    private ArrayList<String> levels = new ArrayList<>() {{
+        add("luigi.json");
+        add("luigi2.json");
+    }};
+
+    private int level = 0;
+
+    private String getLevelAsString(int level) {
+        if (level <= levels.size() && level >= 0) {
+            this.level = level;
+            return levels.get(level);
+        }
+        else{
+            this.level= 0;
+            return levels.get(0);
+        }
+    }
+
+    private int getLevel(){
+        return this.level;
+    }
+
+    private void setLevel(int level){
+        this.level = level;
+    }
+    */
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(20 * 70);
         gameSettings.setHeight(15 * 70);
-        gameSettings.setTitle("Luigi");
+        gameSettings.setTitle("LuigiFactory");
 
         //gameSettings.setMenuEnabled(true);
 
     }
 
     private boolean jumpActive = false;
+
+
+
 
 
 
@@ -90,9 +106,10 @@ public class LuigiGame extends GameApplication {
     // Here is where the game loads the map.
     @Override
     protected void initGame() {
-        getGameWorld().addEntityFactory(new Luigi());
-        getGameWorld().setLevelFromMap("mario.json");
+        getGameWorld().addEntityFactory(new LuigiFactory());
+        getGameWorld().setLevelFromMap("luigi.json");
         //getAudioPlayer().playSound("luigi_call_09.wav");
+
 
 
         player = getGameWorld().spawn("player", 50, 13*70);
@@ -136,6 +153,8 @@ public class LuigiGame extends GameApplication {
                 getAudioPlayer().playSound("smw_keyhole_exit.wav");
                 getDisplay().showMessageBox("Level 1 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
                     System.out.println("Dialog closed");
+                    getGameWorld().setLevelFromMap("luigi2.json");
+                    getGameWorld().spawn("player", 50, 50);
                 });
             }
         });
@@ -144,6 +163,14 @@ public class LuigiGame extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity platform) {
                 setJumpActive(false);
+            }
+        });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.DEATHPLATFORM) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity deathplatform) {
+                getAudioPlayer().playSound("smb_mariodie.wav");
+                startNewGame();
             }
         });
 

@@ -35,21 +35,10 @@ public class PlayerControl extends Component {
     @Override
     public void onUpdate(double tpf) {
 
-        if (physics.getVelocityX() > 0) {
+        if (physics.getVelocityX() > 0 || physics.getVelocityX() < 0) {
             if (texture.getAnimationChannel() == animidle) {
                 texture.loopAnimationChannel(animwalk);
             }
-            if (FXGLMath.abs(physics.getVelocityX()) < 130) {
-                physics.setVelocityX(0);
-                texture.loopAnimationChannel(animidle);
-            }
-        }
-
-        if (physics.getVelocityX() < 0) {
-            if (texture.getAnimationChannel() == animidle) {
-                texture.loopAnimationChannel(animwalk);
-            }
-
             if (FXGLMath.abs(physics.getVelocityX()) < 130) {
                 physics.setVelocityX(0);
                 texture.loopAnimationChannel(animidle);

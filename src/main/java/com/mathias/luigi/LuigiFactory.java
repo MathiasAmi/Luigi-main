@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-public class Luigi implements EntityFactory {
+public class LuigiFactory implements EntityFactory {
 
 
     //Spawns my platform from Tiled. getting the settings from Tiled aswell.
@@ -18,6 +18,17 @@ public class Luigi implements EntityFactory {
     public Entity newPlatform(SpawnData data) {
         return Entities.builder()
                 .type(LuigiType.PLATFORM)
+                .from(data)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .with(new PhysicsComponent())
+                .build();
+    }
+
+    @Spawns("deathplatform")
+    public Entity newDeathPlatform(SpawnData data) {
+        return Entities.builder()
+                .type(LuigiType.DEATHPLATFORM)
                 .from(data)
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new CollidableComponent(true))
