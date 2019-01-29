@@ -4,6 +4,7 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.settings.GameSettings;
+import com.mathias.luigi.EnemyControl;
 import com.mathias.luigi.LuigiFactory;
 import com.mathias.luigi.LuigiType;
 import com.mathias.luigi.PlayerControl;
@@ -11,19 +12,20 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class LuigiGame extends GameApplication {
 
-    private Entity player;
+    private Entity Player;
+    private Entity Enemy;
+    private int levelcomplete = 0;
     /*
     private ArrayList<String> levels = new ArrayList<>() {{
         add("luigi.json");
         add("luigi2.json");
     }};
-
     private int level = 0;
-
     private String getLevelAsString(int level) {
         if (level <= levels.size() && level >= 0) {
             this.level = level;
@@ -34,11 +36,9 @@ public class LuigiGame extends GameApplication {
             return levels.get(0);
         }
     }
-
     private int getLevel(){
         return this.level;
     }
-
     private void setLevel(int level){
         this.level = level;
     }
@@ -66,7 +66,7 @@ public class LuigiGame extends GameApplication {
         getInput().addAction(new UserAction("Left") {
             @Override
             protected void onAction() {
-                player.getComponent(PlayerControl.class).left();
+                Player.getComponent(PlayerControl.class).left();
 
             }
         }, KeyCode.LEFT);
@@ -74,7 +74,7 @@ public class LuigiGame extends GameApplication {
         getInput().addAction(new UserAction("Right") {
             @Override
             protected void onAction() {
-                player.getComponent(PlayerControl.class).right();
+                Player.getComponent(PlayerControl.class).right();
 
             }
         }, KeyCode.RIGHT);
@@ -88,7 +88,7 @@ public class LuigiGame extends GameApplication {
             protected void onActionBegin() {
                 super.onActionBegin();
                 if(!isJumpActive()){
-                    player.getComponent(PlayerControl.class).jump();
+                    Player.getComponent(PlayerControl.class).jump();
                     getAudioPlayer().playSound("smw_jump.wav");
                     setJumpActive(true);
 
@@ -112,11 +112,13 @@ public class LuigiGame extends GameApplication {
 
 
 
-        player = getGameWorld().spawn("player", 50, 13*70);
+        Player = getGameWorld().spawn("player", 50, 13*70);
 
-        getGameWorld().spawn("animenemy", 580, 11*70);
-        getGameWorld().spawn("animenemy", 300, 2*70);
-        getGameWorld().spawn("animenemy", 1200, 8.5*70);
+
+        Enemy = getGameWorld().spawn("animenemy", 580, 11*70);
+        Enemy = getGameWorld().spawn("animenemy", 300, 2*70);
+        Enemy = getGameWorld().spawn("animenemy", 1200, 8.5*70);
+        Enemy.getComponent(EnemyControl.class).jump();
 
         //Image tempBackground = new Image("assets/textures/BGI.png",70*20,70*15,true,true);
 
@@ -140,22 +142,9 @@ public class LuigiGame extends GameApplication {
             protected void onCollisionBegin(Entity player, Entity coin) {
                 getAudioPlayer().playSound("smw_coin.wav");
                 coinCounter++;
+                getGameState().increment("coinsInTotal", +1);
                 coin.removeFromWorld();
-                System.out.println(coinCounter);
-                getGameState().increment("coinsInTotal", 1);
 
-            }
-        });
-
-        getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.DOOR) {
-            @Override
-            protected void onCollisionBegin(Entity player, Entity door) {
-                getAudioPlayer().playSound("smw_keyhole_exit.wav");
-                getDisplay().showMessageBox("Level 1 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
-                    System.out.println("Dialog closed");
-                    getGameWorld().setLevelFromMap("luigi2.json");
-                    getGameWorld().spawn("player", 50, 50);
-                });
             }
         });
 
@@ -170,7 +159,10 @@ public class LuigiGame extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity deathplatform) {
                 getAudioPlayer().playSound("smb_mariodie.wav");
-                startNewGame();
+                Player.removeFromWorld();
+                Player = getGameWorld().spawn("player", 50, 50);
+                getDisplay().showMessageBox("You died to toxic ice... \nTry Again!");
+                System.out.println("You died to toxic ice");
             }
         });
 
@@ -178,13 +170,52 @@ public class LuigiGame extends GameApplication {
             @Override
             protected void onCollisionBegin(Entity player, Entity enemy) {
                 getAudioPlayer().playSound("smb_mariodie.wav");
-                startNewGame();
+                Player.removeFromWorld();
+                Enemy.removeFromWorld();
                 getDisplay().showMessageBox("You died to an enemy... \nTry again!");
                 System.out.println("You died to an enemy");
+                if (levelcomplete == 1){
+                    Player = getGameWorld().spawn("player",50,50);
+                    Enemy = getGameWorld().spawn("animenemy", 580,11*3);
+                }
 
             }
         });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.DOOR) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity door) {
+                if (coinCounter == 9)
+                {
+                levelcomplete++;
+                player.removeFromWorld();
+                getAudioPlayer().playSound("smw_keyhole_exit.wav");
+                getDisplay().showMessageBox("Level 1 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
+                    System.out.println("Dialog closed");
+                });
+                if (levelcomplete == 2) {
+                    getDisplay().showMessageBox("You have completed the game!", () -> {
+                        System.out.println("Dialog closed");
+                        exit();
+                    });
+                }
+                if (levelcomplete == 1) {
+                    getGameWorld().setLevelFromMap("luigi2.json");
+                    coinCounter = 0;
+                    getGameState().increment("coinsInTotal",0);
+                    Player = getGameWorld().spawn("player", 50, 50);
+                    Player.getComponent(PlayerControl.class);
+                    Enemy = getGameWorld().spawn("animenemy", 500, 11 * 3);
+                    Enemy = getGameWorld().spawn("animenemy", 1000, 6*70);
+                    Enemy.getComponent(EnemyControl.class).jump();
+                }
+            }
+                if (coinCounter != 9){
+                    getDisplay().showMessageBox("You are missing some coins!");
+                }
+        }});
     }
+
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {

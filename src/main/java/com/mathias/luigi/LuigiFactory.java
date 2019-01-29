@@ -56,8 +56,8 @@ public class LuigiFactory implements EntityFactory {
                 .type(LuigiType.PLAYER)
                 .from(data)
                 .bbox(new HitBox(BoundingShape.box(25, 40)))
-                .with(physics)
                 .with(new CollidableComponent(true))
+                .with(physics)
                 .with(new PlayerControl())
                 .build();
     }

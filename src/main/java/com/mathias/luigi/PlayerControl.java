@@ -44,7 +44,24 @@ public class PlayerControl extends Component {
                 texture.loopAnimationChannel(animidle);
             }
         }
+
+        //Does so my character cant move out the map. Get pushed back
+
+    if(entity.getRightX() >=1400 ){
+        physics.setVelocityX(-150);
+    } if (entity.getX() <= 0){
+        physics.setVelocityX(150);
+        }
+
+    if(entity.getHeight() >=1400){
+        physics.setVelocityY(400);
+    } if(entity.getY() <= 0){
+        physics.setVelocityY(150);
+        }
+
     }
+
+    // setting movement for my character.
 
     public void left(){
         physics.setVelocityX(-150);
