@@ -175,9 +175,15 @@ public class LuigiGame extends GameApplication {
                 getDisplay().showMessageBox("You died to an enemy... \nTry again!");
                 System.out.println("You died to an enemy");
                 if (levelcomplete == 1){
+                    Enemy.removeFromWorld();
                     Player = getGameWorld().spawn("player",50,50);
-                    Enemy = getGameWorld().spawn("animenemy", 580,11*3);
+                    Enemy = getGameWorld().spawn("animenemy", 500, 11 * 3);
+                    Enemy = getGameWorld().spawn("animenemy", 1000, 6*70);
                 }
+                else{Enemy = getGameWorld().spawn("animenemy", 580, 11*70);
+                Enemy = getGameWorld().spawn("animenemy", 300, 2*70);
+                Enemy = getGameWorld().spawn("animenemy", 1200, 8.5*70);
+                Player = getGameWorld().spawn("player", 50, 13*70);}
 
             }
         });
@@ -185,6 +191,9 @@ public class LuigiGame extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
+                if (coinCounter != 9){
+                    getDisplay().showMessageBox("You are missing some coins!");
+                }
                 if (coinCounter == 9)
                 {
                 levelcomplete++;
@@ -202,7 +211,7 @@ public class LuigiGame extends GameApplication {
                 if (levelcomplete == 1) {
                     getGameWorld().setLevelFromMap("luigi2.json");
                     coinCounter = 0;
-                    getGameState().increment("coinsInTotal",0);
+                    getGameState().increment("coinsInTotal",-9);
                     Player = getGameWorld().spawn("player", 50, 50);
                     Player.getComponent(PlayerControl.class);
                     Enemy = getGameWorld().spawn("animenemy", 500, 11 * 3);
@@ -210,9 +219,6 @@ public class LuigiGame extends GameApplication {
                     Enemy.getComponent(EnemyControl.class).jump();
                 }
             }
-                if (coinCounter != 9){
-                    getDisplay().showMessageBox("You are missing some coins!");
-                }
         }});
     }
 
