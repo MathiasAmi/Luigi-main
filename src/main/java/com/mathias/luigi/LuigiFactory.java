@@ -8,7 +8,6 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 public class LuigiFactory implements EntityFactory {
 
@@ -36,6 +35,17 @@ public class LuigiFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("box")
+    public Entity newBox(SpawnData data) {
+        return Entities.builder()
+                .type(LuigiType.BOX)
+                .from(data)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .with(new PhysicsComponent())
+                .build();
+    }
+
 
     @Spawns("door")
     public Entity newDoor(SpawnData data) {
@@ -45,6 +55,17 @@ public class LuigiFactory implements EntityFactory {
                 .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
                 .with(new CollidableComponent(true))
                 .build();
+    }
+
+    @Spawns("end")
+    public Entity newEnd(SpawnData data) {
+        return Entities.builder()
+                .type(LuigiType.END)
+                .from(data)
+                .bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+                .with(new CollidableComponent(true))
+                .build();
+
     }
 
     @Spawns("player")
@@ -62,6 +83,20 @@ public class LuigiFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("walker")
+    public Entity newWalker (SpawnData data) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.DYNAMIC);
+        return Entities.builder()
+
+                .type(LuigiType.WALKER)
+                .from(data)
+                .bbox(new HitBox(BoundingShape.box(25,40)))
+                .with(new CollidableComponent(true))
+                .with(new EnemyWalkControl())
+                .build();
+    }
+
     @Spawns("animenemy")
     public Entity newEnemy(SpawnData data) {
         PhysicsComponent physics = new PhysicsComponent();
@@ -73,7 +108,7 @@ public class LuigiFactory implements EntityFactory {
                 .bbox(new HitBox(BoundingShape.box(25,39)))
                 .with(physics)
                 .with(new CollidableComponent(true))
-                .with(new EnemyControl())
+                .with(new EnemyJumpControl())
                 .build();
 
     }

@@ -9,7 +9,7 @@ import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.time.LocalTimer;
 import javafx.util.Duration;
 
-public class EnemyControl extends Component {
+public class EnemyJumpControl extends Component {
 
      private PhysicsComponent physics;
 
@@ -19,7 +19,7 @@ public class EnemyControl extends Component {
 
      private LocalTimer jumpTimer;
 
-    public EnemyControl() {
+    public EnemyJumpControl() {
 
         animenemy = new AnimationChannel("enemyjump.png", 4, 23, 32, Duration.seconds(1), 0, 3);
 

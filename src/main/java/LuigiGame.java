@@ -4,21 +4,26 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.settings.GameSettings;
-import com.mathias.luigi.EnemyControl;
+import com.mathias.luigi.EnemyWalkControl;
 import com.mathias.luigi.LuigiFactory;
 import com.mathias.luigi.LuigiType;
 import com.mathias.luigi.PlayerControl;
+import javafx.print.PageLayout;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
+import java.awt.*;
 import java.util.Map;
 
 public class LuigiGame extends GameApplication {
 
     private Entity Player;
-    private Entity Enemy;
+    private Entity Walker;
+    private Entity Enemy1;
+    private Entity Enemy2;
+    private Entity Enemy3;
     private int levelcomplete = 0;
     /*
     private ArrayList<String> levels = new ArrayList<>() {{
@@ -114,19 +119,14 @@ public class LuigiGame extends GameApplication {
 
         Player = getGameWorld().spawn("player", 50, 13*70);
 
-
-        Enemy = getGameWorld().spawn("animenemy", 580, 11*70);
-        Enemy = getGameWorld().spawn("animenemy", 300, 2*70);
-        Enemy = getGameWorld().spawn("animenemy", 1200, 8.5*70);
-        Enemy.getComponent(EnemyControl.class).jump();
+        Enemy1 = getGameWorld().spawn("animenemy", 580, 11*70);
+        Enemy2 = getGameWorld().spawn("animenemy", 300, 2*70);
+        Enemy3 = getGameWorld().spawn("animenemy", 1200, 8.5*70);
 
         //Image tempBackground = new Image("assets/textures/BGI.png",70*20,70*15,true,true);
 
         //getGameScene().setBackgroundRepeat(tempBackground);
 
-        //Image image = new Image("assets/textures/BGI.png");
-
-        //getGameScene().setBackgroundRepeat(image);
 
 
 
@@ -160,9 +160,66 @@ public class LuigiGame extends GameApplication {
             protected void onCollisionBegin(Entity player, Entity deathplatform) {
                 getAudioPlayer().playSound("smb_mariodie.wav");
                 Player.removeFromWorld();
-                Player = getGameWorld().spawn("player", 50, 50);
                 getDisplay().showMessageBox("You died to toxic ice... \nTry Again!");
                 System.out.println("You died to toxic ice");
+                if (levelcomplete == 1) {
+                    Player = getGameWorld().spawn("player", 50, 50);
+                }
+                if (levelcomplete == 2) {
+                    Player = getGameWorld().spawn("player", 720, 6 * 70);
+                }
+            }
+        });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.WALKER, LuigiType.BOX) {
+            @Override
+            protected void onCollisionBegin(Entity walker, Entity box) {
+                super.onCollisionBegin(walker, box);
+                walker.getComponent(EnemyWalkControl.class).setCollision(true);
+                walker.getComponent(EnemyWalkControl.class).onUpdate(tpf());
+            }
+
+            @Override
+            protected void onCollision(Entity walker, Entity box) {
+                super.onCollisionBegin(walker, box);
+            }
+
+            @Override
+            protected void onCollisionEnd(Entity walker, Entity box) {
+                super.onCollisionEnd(walker, box);
+
+                walker.getComponent(EnemyWalkControl.class).setCollision(false);
+            }
+        });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.WALKER) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity walker) {
+                getAudioPlayer().playSound("smb_mariodie.wav");
+                Player.removeFromWorld();
+                Walker.removeFromWorld();
+                getDisplay().showMessageBox("You died to an enemy... \nTry again!");
+                System.out.println("You died to an enemy");
+                if (levelcomplete == 1) {
+                    Player = getGameWorld().spawn("player", 50, 50);
+                    Walker = getGameWorld().spawn("walker", 100, 8.5 * 70);
+                }
+                if (levelcomplete == 2) {
+                    Player = getGameWorld().spawn("player", 720, 6 * 70);
+                    Walker = getGameWorld().spawn("walker", 150, 3.5 * 70);
+                }
+
+
+            }
+        });
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.END) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity end) {
+                getDisplay().showMessageBox("You have completed the game!", () -> {
+                    System.out.println("Dialog closed");
+                    exit();
+                });
             }
         });
 
@@ -171,19 +228,31 @@ public class LuigiGame extends GameApplication {
             protected void onCollisionBegin(Entity player, Entity enemy) {
                 getAudioPlayer().playSound("smb_mariodie.wav");
                 Player.removeFromWorld();
-                Enemy.removeFromWorld();
+                Enemy1.removeFromWorld();
                 getDisplay().showMessageBox("You died to an enemy... \nTry again!");
                 System.out.println("You died to an enemy");
-                if (levelcomplete == 1){
-                    Enemy.removeFromWorld();
-                    Player = getGameWorld().spawn("player",50,50);
-                    Enemy = getGameWorld().spawn("animenemy", 500, 11 * 3);
-                    Enemy = getGameWorld().spawn("animenemy", 1000, 6*70);
+                if (levelcomplete == 1) {
+                    Enemy2.removeFromWorld();
+                    Player = getGameWorld().spawn("player", 50, 50);
+                    Enemy1 = getGameWorld().spawn("animenemy", 550, 11 * 3);
+                    Enemy2 = getGameWorld().spawn("animenemy", 1000, 6 * 70);
                 }
-                else{Enemy = getGameWorld().spawn("animenemy", 580, 11*70);
-                Enemy = getGameWorld().spawn("animenemy", 300, 2*70);
-                Enemy = getGameWorld().spawn("animenemy", 1200, 8.5*70);
-                Player = getGameWorld().spawn("player", 50, 13*70);}
+                if (levelcomplete == 2) {
+                    Enemy2.removeFromWorld();
+                    Enemy3.removeFromWorld();
+                    Enemy1 = getGameWorld().spawn("animenemy", 1270, 2 * 70);
+                    Enemy2 = getGameWorld().spawn("animenemy", 500, 2 * 70);
+                    Enemy3 = getGameWorld().spawn("animenemy", 1250, 8.5 * 70);
+                    Player = getGameWorld().spawn("player", 720, 6 * 70);
+
+                } else {
+                    Enemy2.removeFromWorld();
+                    Enemy3.removeFromWorld();
+                    Enemy1 = getGameWorld().spawn("animenemy", 580, 11 * 70);
+                    Enemy2 = getGameWorld().spawn("animenemy", 300, 2 * 70);
+                    Enemy3 = getGameWorld().spawn("animenemy", 1200, 8.5 * 70);
+                    Player = getGameWorld().spawn("player", 50, 13 * 70);
+                }
 
             }
         });
@@ -191,36 +260,32 @@ public class LuigiGame extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
-                if (coinCounter != 9){
-                    getDisplay().showMessageBox("You are missing some coins!");
-                }
-                if (coinCounter == 9)
-                {
                 levelcomplete++;
                 player.removeFromWorld();
-                getAudioPlayer().playSound("smw_keyhole_exit.wav");
-                getDisplay().showMessageBox("Level 1 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
-                    System.out.println("Dialog closed");
-                });
-                if (levelcomplete == 2) {
-                    getDisplay().showMessageBox("You have completed the game!", () -> {
-                        System.out.println("Dialog closed");
-                        exit();
-                    });
-                }
                 if (levelcomplete == 1) {
-                    getGameWorld().setLevelFromMap("luigi2.json");
-                    coinCounter = 0;
-                    getGameState().increment("coinsInTotal",-9);
-                    Player = getGameWorld().spawn("player", 50, 50);
-                    Player.getComponent(PlayerControl.class);
-                    Enemy = getGameWorld().spawn("animenemy", 500, 11 * 3);
-                    Enemy = getGameWorld().spawn("animenemy", 1000, 6*70);
-                    Enemy.getComponent(EnemyControl.class).jump();
+                        getGameWorld().setLevelFromMap("luigi2.json");
+                        coinCounter = 0;
+                        getGameState().increment("coinsInTotal", -9);
+                        Player = getGameWorld().spawn("player", 50, 50);
+                        Player.getComponent(PlayerControl.class);
+                        Enemy1 = getGameWorld().spawn("animenemy", 550, 11 * 3);
+                        Enemy2 = getGameWorld().spawn("animenemy", 1000, 6 * 70);
+                        Walker = getGameWorld().spawn("walker", 100, 8.5 * 70);
+                    } else if (levelcomplete == 2) {
+                        getGameWorld().setLevelFromMap("luigi3.json");
+                        coinCounter = 0;
+                        getGameState().increment("coinsInTotal", -13);
+                        Player = getGameWorld().spawn("player", 720, 6 * 70);
+                        Player.getComponent(PlayerControl.class);
+                        Enemy1 = getGameWorld().spawn("animenemy", 1270, 2 * 70);
+                        Enemy2 = getGameWorld().spawn("animenemy", 500, 2 * 70);
+                        Enemy3 = getGameWorld().spawn("animenemy", 1250, 8.5 * 70);
+                        Walker = getGameWorld().spawn("walker", 150, 3.5 * 70);
+                    }
                 }
-            }
-        }});
+        });
     }
+
 
 
     @Override
@@ -233,6 +298,11 @@ public class LuigiGame extends GameApplication {
     @Override
     protected void initUI() {
         super.initUI();
+
+
+        Image image = new Image("assets/textures/BG.png", 90*20, 90*15, false, false);
+
+        getGameScene().setBackgroundRepeat(image);
 
         Text coins = getUIFactory().newText("Total coins:", Color.YELLOWGREEN, 18);
         coins.setTranslateX(30);

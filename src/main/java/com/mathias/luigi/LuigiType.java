@@ -1,5 +1,5 @@
 package com.mathias.luigi;
 
 public enum LuigiType {
-    PLAYER, COIN, PLATFORM, DOOR, ENEMY, DEATHPLATFORM,
+    PLAYER, COIN, PLATFORM, DOOR, ENEMY, DEATHPLATFORM, WALKER, BOX, END,
 }
