@@ -1,4 +1,4 @@
-# com.mathias.luigi.LuigiGame
+# LuigiGame
 ![screenshot](https://user-images.githubusercontent.com/42993917/52009170-91d68d00-24d2-11e9-8d31-3f4b9877dc65.png)
 
 ## Spillet er bygget med:
