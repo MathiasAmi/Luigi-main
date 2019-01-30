@@ -14,7 +14,7 @@ public class EnemyWalkControl extends Component {
 
     private  boolean collision = false;
 
-
+// My walker's control is being coded in this class. making sure it turns around when it hits the box. and goes from side to side.
     public EnemyWalkControl() {
 
 

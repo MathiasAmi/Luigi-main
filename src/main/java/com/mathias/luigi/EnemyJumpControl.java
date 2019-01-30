@@ -19,6 +19,8 @@ public class EnemyJumpControl extends Component {
 
      private LocalTimer jumpTimer;
 
+// My jumper enemies are coded in this class.
+    
     public EnemyJumpControl() {
 
         animenemy = new AnimationChannel("enemyjump.png", 4, 23, 32, Duration.seconds(1), 0, 3);

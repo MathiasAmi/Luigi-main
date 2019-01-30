@@ -12,7 +12,8 @@ import javafx.scene.shape.Circle;
 public class LuigiFactory implements EntityFactory {
 
 
-    //Spawns my platform from Tiled. getting the settings from Tiled aswell.
+    //Spawns my platform from Tiled. getting the settings from Tiled aswell. Spawns every entity i have, so it can be handled
+    // in the collision handler.
     @Spawns("platform")
     public Entity newPlatform(SpawnData data) {
         return Entities.builder()

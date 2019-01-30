@@ -15,6 +15,8 @@ public class PlayerControl extends Component {
 
     private AnimationChannel animidle, animwalk, animjump;
 
+    //PlayerControl is adding animations and the scale of the player. Also sets speed and jump height.
+
     public PlayerControl(){
 
         animidle = new AnimationChannel("luigiwalk.png", 4, 19, 34, Duration.seconds(1), 2, 2);

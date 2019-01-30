@@ -23,7 +23,7 @@ public class LuigiGame extends GameApplication {
     private Entity Enemy3;
     private int levelcomplete = 0;
 
-// My settings for the game. such as width and height. Also where my menu loads. 
+// My settings for the game. such as width and height. Also where my menu loads.
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(20 * 70);
@@ -39,7 +39,7 @@ public class LuigiGame extends GameApplication {
 
 
 
-
+//Simply puts the controls on my character.
 
     @Override
     protected void initInput() {
@@ -83,7 +83,7 @@ public class LuigiGame extends GameApplication {
         }, KeyCode.UP);
     }
 
-    // Here is where the game loads the map.
+    // Here is where the game loads the map, spawns the player and enemies.
     @Override
     protected void initGame() {
         getGameWorld().addEntityFactory(new LuigiFactory());
@@ -99,6 +99,7 @@ public class LuigiGame extends GameApplication {
 
 
     }
+    //This whole section adds the collisionhandler, and tells the program what to do, when two entities hit eachother.
 
     public int coinCounter = 0;
 
@@ -279,7 +280,7 @@ public class LuigiGame extends GameApplication {
         }});
     }
 
-
+// Adding the variables, in this case my coincounter.
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
@@ -287,7 +288,7 @@ public class LuigiGame extends GameApplication {
 
         vars.put("coinsInTotal", 0);
     }
-
+// The graphical scene is added here. Coincounter in the top left corner.
     @Override
     protected void initUI() {
         super.initUI();
@@ -304,7 +305,7 @@ public class LuigiGame extends GameApplication {
 
         getGameScene().addUINodes(coins,coinsInTotal);
 
-
+// my jump method is making sure that my player cant fly, and can only jump again when landing on a platform.
     }
 
     public boolean isJumpActive(){
