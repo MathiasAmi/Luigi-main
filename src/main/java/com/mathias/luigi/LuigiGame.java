@@ -215,10 +215,7 @@ public class LuigiGame extends GameApplication {
                 getDisplay().showMessageBox("You died to an enemy... \nTry again!");
                 System.out.println("You died to an enemy");
                 if (levelcomplete == 1) {
-                    Enemy2.removeFromWorld();
                     Player = getGameWorld().spawn("player", 50, 50);
-                    Enemy1 = getGameWorld().spawn("animenemy", 550, 11 * 3);
-                    Enemy2 = getGameWorld().spawn("animenemy", 1000, 6 * 70);
                 }
                 if (levelcomplete == 2) {
                     Enemy2.removeFromWorld();
@@ -253,19 +250,18 @@ public class LuigiGame extends GameApplication {
                 if (levelcomplete == 1) {
                     getAudioPlayer().playSound("smw_keyhole_exit.wav");
                     getDisplay().showMessageBox("Level 1 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
-                                System.out.println("Dialog closed");
-                            });
+                        System.out.println("Dialog closed");
+                    });
                         getGameWorld().setLevelFromMap("luigi2.json");
                         coinCounter = 0;
                         getGameState().increment("coinsInTotal", -9);
                         Player = getGameWorld().spawn("player", 50, 50);
                         Player.getComponent(PlayerControl.class);
-                        Enemy1 = getGameWorld().spawn("animenemy", 550, 11 * 3);
-                        Enemy2 = getGameWorld().spawn("animenemy", 1000, 6 * 70);
                         Walker = getGameWorld().spawn("walker", 100, 8.5 * 70);
-                    } else if (levelcomplete == 2) {
-                    getAudioPlayer().playSound("smw_keyhole_exit.wav");
-                    getDisplay().showMessageBox("Level 2 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
+                    }
+                        else if (levelcomplete == 2) {
+                        getAudioPlayer().playSound("smw_keyhole_exit.wav");
+                        getDisplay().showMessageBox("Level 2 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
                         System.out.println("Dialog closed");
                     });
                         getGameWorld().setLevelFromMap("luigi3.json");
