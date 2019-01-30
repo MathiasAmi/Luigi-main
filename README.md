@@ -1,5 +1,5 @@
 # com.mathias.luigi.LuigiGame
-![game](https://user-images.githubusercontent.com/42993917/51982894-87e36880-2497-11e9-8654-12f245acdede.PNG)
+![screenshot](https://user-images.githubusercontent.com/42993917/52009170-91d68d00-24d2-11e9-8d31-3f4b9877dc65.png)
 
 ## Spillet er bygget med:
 Spillet er bygget med javaFXGL, som jeg har lært ved hjælp af youtube tutorials og wiki. Spillet er udviklet igennem 3 uger.
