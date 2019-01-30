@@ -1,6 +1,4 @@
 # LuigiGame
-
-# Screenshot
 ![game](https://user-images.githubusercontent.com/42993917/51982894-87e36880-2497-11e9-8654-12f245acdede.PNG)
 
 ## Spillet er bygget med:
