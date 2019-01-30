@@ -23,7 +23,7 @@ public class LuigiGame extends GameApplication {
     private Entity Enemy3;
     private int levelcomplete = 0;
 
-
+// My settings for the game. such as width and height. Also where my menu loads. 
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(20 * 70);
