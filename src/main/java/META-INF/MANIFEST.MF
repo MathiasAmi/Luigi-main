@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: LuigiGame
+Main-Class: com.mathias.luigi.LuigiGame
 
