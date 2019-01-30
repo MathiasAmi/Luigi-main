@@ -39,36 +39,14 @@
                 }, 
                 {
                  "height":45,
-                 "id":3,
-                 "name":"",
-                 "rotation":0,
-                 "type":"coin",
-                 "visible":true,
-                 "width":42,
-                 "x":503,
-                 "y":721.5
-                }, 
-                {
-                 "height":45,
                  "id":4,
                  "name":"",
                  "rotation":0,
                  "type":"coin",
                  "visible":true,
                  "width":42,
-                 "x":85,
-                 "y":711.5
-                }, 
-                {
-                 "height":45,
-                 "id":5,
-                 "name":"",
-                 "rotation":0,
-                 "type":"coin",
-                 "visible":true,
-                 "width":42,
-                 "x":433,
-                 "y":927.5
+                 "x":501,
+                 "y":715.5
                 }, 
                 {
                  "height":45,
@@ -116,17 +94,6 @@
                 }, 
                 {
                  "height":45,
-                 "id":10,
-                 "name":"",
-                 "rotation":0,
-                 "type":"coin",
-                 "visible":true,
-                 "width":42,
-                 "x":1345,
-                 "y":199.5
-                }, 
-                {
-                 "height":45,
                  "id":11,
                  "name":"",
                  "rotation":0,
@@ -146,17 +113,6 @@
                  "width":42,
                  "x":503,
                  "y":291.5
-                }, 
-                {
-                 "height":45,
-                 "id":13,
-                 "name":"",
-                 "rotation":0,
-                 "type":"coin",
-                 "visible":true,
-                 "width":42,
-                 "x":921,
-                 "y":571.5
                 }, 
                 {
                  "height":70,

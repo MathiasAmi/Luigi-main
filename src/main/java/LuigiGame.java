@@ -8,13 +8,10 @@ import com.mathias.luigi.EnemyWalkControl;
 import com.mathias.luigi.LuigiFactory;
 import com.mathias.luigi.LuigiType;
 import com.mathias.luigi.PlayerControl;
-import javafx.print.PageLayout;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import java.awt.*;
 import java.util.Map;
 
 public class LuigiGame extends GameApplication {
@@ -25,29 +22,7 @@ public class LuigiGame extends GameApplication {
     private Entity Enemy2;
     private Entity Enemy3;
     private int levelcomplete = 0;
-    /*
-    private ArrayList<String> levels = new ArrayList<>() {{
-        add("luigi.json");
-        add("luigi2.json");
-    }};
-    private int level = 0;
-    private String getLevelAsString(int level) {
-        if (level <= levels.size() && level >= 0) {
-            this.level = level;
-            return levels.get(level);
-        }
-        else{
-            this.level= 0;
-            return levels.get(0);
-        }
-    }
-    private int getLevel(){
-        return this.level;
-    }
-    private void setLevel(int level){
-        this.level = level;
-    }
-    */
+
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -55,7 +30,7 @@ public class LuigiGame extends GameApplication {
         gameSettings.setHeight(15 * 70);
         gameSettings.setTitle("LuigiFactory");
 
-        //gameSettings.setMenuEnabled(true);
+        gameSettings.setMenuEnabled(true);
 
     }
 
@@ -113,7 +88,6 @@ public class LuigiGame extends GameApplication {
     protected void initGame() {
         getGameWorld().addEntityFactory(new LuigiFactory());
         getGameWorld().setLevelFromMap("luigi.json");
-        //getAudioPlayer().playSound("luigi_call_09.wav");
 
 
 
@@ -122,13 +96,6 @@ public class LuigiGame extends GameApplication {
         Enemy1 = getGameWorld().spawn("animenemy", 580, 11*70);
         Enemy2 = getGameWorld().spawn("animenemy", 300, 2*70);
         Enemy3 = getGameWorld().spawn("animenemy", 1200, 8.5*70);
-
-        //Image tempBackground = new Image("assets/textures/BGI.png",70*20,70*15,true,true);
-
-        //getGameScene().setBackgroundRepeat(tempBackground);
-
-
-
 
 
     }
@@ -216,10 +183,23 @@ public class LuigiGame extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.END) {
             @Override
             protected void onCollisionBegin(Entity player, Entity end) {
-                getDisplay().showMessageBox("You have completed the game!", () -> {
+                if (coinCounter != 9){
+                    getDisplay().showMessageBox("You are missing some coins!");
+                }
+                if (coinCounter == 9)
+                {
+                getAudioPlayer().playSound("smb_stage_clear.wav");
+                getDisplay().showMessageBox("Congratulations you have completed the game! \n You collected: " + coinCounter + "out of 9 coins!", () -> {
                     System.out.println("Dialog closed");
                     exit();
                 });
+            }
+        }});
+
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.BOX) {
+            @Override
+            protected void onCollisionBegin(Entity player, Entity box) {
+                setJumpActive(false);
             }
         });
 
@@ -260,9 +240,18 @@ public class LuigiGame extends GameApplication {
         getPhysicsWorld().addCollisionHandler(new CollisionHandler(LuigiType.PLAYER, LuigiType.DOOR) {
             @Override
             protected void onCollisionBegin(Entity player, Entity door) {
+                if (coinCounter != 9){
+                    getDisplay().showMessageBox("You are missing some coins");
+                }
+                if (coinCounter == 9)
+                {
                 levelcomplete++;
                 player.removeFromWorld();
                 if (levelcomplete == 1) {
+                    getAudioPlayer().playSound("smw_keyhole_exit.wav");
+                    getDisplay().showMessageBox("Level 1 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
+                                System.out.println("Dialog closed");
+                            });
                         getGameWorld().setLevelFromMap("luigi2.json");
                         coinCounter = 0;
                         getGameState().increment("coinsInTotal", -9);
@@ -272,9 +261,13 @@ public class LuigiGame extends GameApplication {
                         Enemy2 = getGameWorld().spawn("animenemy", 1000, 6 * 70);
                         Walker = getGameWorld().spawn("walker", 100, 8.5 * 70);
                     } else if (levelcomplete == 2) {
+                    getAudioPlayer().playSound("smw_keyhole_exit.wav");
+                    getDisplay().showMessageBox("Level 2 Completed! \nYou collected: " + coinCounter + " out of 9 coins!", () -> {
+                        System.out.println("Dialog closed");
+                    });
                         getGameWorld().setLevelFromMap("luigi3.json");
                         coinCounter = 0;
-                        getGameState().increment("coinsInTotal", -13);
+                        getGameState().increment("coinsInTotal", -9);
                         Player = getGameWorld().spawn("player", 720, 6 * 70);
                         Player.getComponent(PlayerControl.class);
                         Enemy1 = getGameWorld().spawn("animenemy", 1270, 2 * 70);
@@ -283,7 +276,7 @@ public class LuigiGame extends GameApplication {
                         Walker = getGameWorld().spawn("walker", 150, 3.5 * 70);
                     }
                 }
-        });
+        }});
     }
 
 
@@ -298,11 +291,6 @@ public class LuigiGame extends GameApplication {
     @Override
     protected void initUI() {
         super.initUI();
-
-
-        Image image = new Image("assets/textures/BG.png", 90*20, 90*15, false, false);
-
-        getGameScene().setBackgroundRepeat(image);
 
         Text coins = getUIFactory().newText("Total coins:", Color.YELLOWGREEN, 18);
         coins.setTranslateX(30);
