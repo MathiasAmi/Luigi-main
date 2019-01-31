@@ -32,7 +32,7 @@ public class LuigiGame extends GameApplication {
         gameSettings.setHeight(15 * 70);
         gameSettings.setTitle("LuigiFactory");
 
-        //gameSettings.setMenuEnabled(true);
+        gameSettings.setMenuEnabled(true);
 
     }
 
